@@ -1,0 +1,35 @@
+# --- Backend (Java / Maven) ---
+# Carpeta donde Maven deja lo compilado: se regenera siempre
+target/
+*.class
+*.jar
+*.log
+# Excepción: el wrapper de Maven sí se versiona
+!.mvn/wrapper/maven-wrapper.jar
+
+# --- Frontend (Node / React) ---
+node_modules/
+dist/
+.vite/
+
+# --- Secretos y configuración local ---
+# Nunca subir contraseñas ni claves
+.env
+.env.*
+!.env.example
+
+# --- IDEs ---
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+.factorypath
+
+# --- Sistema operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Documentos de planificación personales ---
+docs/Proyecto_Nutri_App_Plan.docx
