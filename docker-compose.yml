@@ -1,0 +1,20 @@
+services:
+  db:
+    image: postgres:16
+    container_name: nutriapp-db
+    environment:
+      POSTGRES_DB: nutriapp
+      POSTGRES_USER: nutri
+      POSTGRES_PASSWORD: nutri_dev_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U nutri -d nutriapp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  pgdata:
