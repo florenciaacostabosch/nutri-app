@@ -16,9 +16,17 @@ import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import com.nutriapp.auth.EmailAlreadyExistsException;
+import com.nutriapp.auth.InvalidCredentialsException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    ProblemDetail handleInvalidCredentials(InvalidCredentialsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, ex.getMessage());
+        problem.setTitle("Authentication failed");
+        return problem;
+    }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     ProblemDetail handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
