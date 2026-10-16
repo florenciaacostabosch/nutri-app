@@ -15,10 +15,13 @@ public class AuthService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final TokenService tokenService;
 
-    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public AuthService(UserRepository userRepository, PasswordEncoder passwordEncoder,
+            TokenService tokenService) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.tokenService = tokenService;
     }
 
     @Transactional
@@ -36,5 +39,17 @@ public class AuthService {
                 request.name().trim());
 
         return UserResponse.from(userRepository.save(user));
+    }
+
+    @Transactional(readOnly = true)
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmailIgnoreCase(request.email().trim())
+                .filter(found -> passwordEncoder.matches(request.password(), found.getPasswordHash()))
+                .orElseThrow(InvalidCredentialsException::new);
+
+        return new LoginResponse(
+                tokenService.generateToken(user),
+                "Bearer",
+                tokenService.expiresInSeconds());
     }
 }
