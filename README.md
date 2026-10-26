@@ -63,7 +63,7 @@ El backend usa por defecto la base de datos del `docker-compose.yml`. Se puede c
 ## Estado del proyecto
 
 - [x] Base e infraestructura: Spring Boot, PostgreSQL, Flyway, Docker Compose y React
-- [ ] Autenticación con JWT y roles
+- [x] Autenticación con JWT y roles
 - [ ] Turnos y disponibilidad
 - [ ] Seguimiento del progreso
 - [ ] Planes alimentarios
