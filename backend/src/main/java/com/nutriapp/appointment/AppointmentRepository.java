@@ -1,6 +1,7 @@
 package com.nutriapp.appointment;
 
 import java.time.Instant;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -28,4 +29,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     boolean existsPatientOverlap(@Param("patientId") Long patientId,
                                  @Param("start") Instant start,
                                  @Param("end") Instant end);
+
+    // Turnos activos de un nutricionista que tocan el rango [from, to).
+    @Query("""
+            select a from Appointment a
+            where a.nutritionistId = :nutritionistId
+              and a.status <> com.nutriapp.appointment.AppointmentStatus.CANCELLED
+              and a.startAt < :to and a.endAt > :from
+            """)
+    List<Appointment> findActiveInRange(@Param("nutritionistId") Long nutritionistId,
+                                        @Param("from") Instant from,
+                                        @Param("to") Instant to);
 }
