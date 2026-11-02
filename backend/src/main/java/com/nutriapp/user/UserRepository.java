@@ -19,4 +19,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @org.springframework.data.jpa.repository.Lock(jakarta.persistence.LockModeType.PESSIMISTIC_WRITE)
     @org.springframework.data.jpa.repository.Query("select u from User u where u.id = :id")
     java.util.Optional<User> findByIdForUpdate(@org.springframework.data.repository.query.Param("id") Long id);
+
+    java.util.List<User> findByRoleOrderByNameAsc(Role role);
 }
