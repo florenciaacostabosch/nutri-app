@@ -61,4 +61,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
         return handleExceptionInternal(ex, problem, headers, status, request);
     }
+
+    // Deadlock o bloqueo fallido por reservas simultáneas: la transacción perdedora se revierte
+    // y el cliente puede reintentar. Es un conflicto, no un error del servidor.
+    @org.springframework.web.bind.annotation.ExceptionHandler(org.springframework.dao.PessimisticLockingFailureException.class)
+    public org.springframework.http.ProblemDetail handleConcurrencyFailure(
+            org.springframework.dao.PessimisticLockingFailureException ex) {
+        return org.springframework.http.ProblemDetail.forStatusAndDetail(
+                org.springframework.http.HttpStatus.CONFLICT,
+                "No se pudo completar la reserva por una operación simultánea. Probá de nuevo.");
+    }
 }
