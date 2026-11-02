@@ -40,4 +40,15 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Long> 
     List<Appointment> findActiveInRange(@Param("nutritionistId") Long nutritionistId,
                                         @Param("from") Instant from,
                                         @Param("to") Instant to);
+
+    // Turnos donde el usuario es el paciente o el nutricionista. Incluye los cancelados.
+    @Query("""
+            select a from Appointment a
+            where (a.patientId = :userId or a.nutritionistId = :userId)
+              and a.startAt < :to and a.endAt > :from
+            order by a.startAt
+            """)
+    List<Appointment> findMine(@Param("userId") Long userId,
+                               @Param("from") Instant from,
+                               @Param("to") Instant to);
 }
