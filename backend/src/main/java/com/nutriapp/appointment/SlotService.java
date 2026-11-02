@@ -83,4 +83,13 @@ public class SlotService {
         }
         return result;
     }
+
+    // ¿Está libre ese instante exacto? Reutiliza el mismo cálculo de la grilla de huecos,
+    // así consultar y reservar nunca pueden discrepar.
+    @Transactional(readOnly = true)
+    public boolean isFree(Long nutritionistId, Instant startAt) {
+        LocalDate date = startAt.atZone(zone).toLocalDate();
+        return freeSlots(nutritionistId, date, date).stream()
+                .anyMatch(slot -> slot.startAt().equals(startAt));
+    }
 }
